@@ -26,8 +26,11 @@ const withLocalizePropTypes = {
     /** Converts a datetime into a localized string representation that's relative to current moment in time */
     datetimeToRelative: PropTypes.func.isRequired,
 
-    /** Formats a datetime to local date and time string */
+    /** Formats a datetime to local date */
     datetimeToCalendarTime: PropTypes.func.isRequired,
+
+    /** Formats a datetime to local time string */
+    datetimeToLocalString: PropTypes.func.isRequired,
 
     /** Returns a locally converted phone number without the country code */
     toLocalPhone: PropTypes.func.isRequired,
@@ -77,6 +80,7 @@ class LocaleContextProvider extends React.Component {
             numberFormat: this.numberFormat.bind(this),
             datetimeToRelative: this.datetimeToRelative.bind(this),
             datetimeToCalendarTime: this.datetimeToCalendarTime.bind(this),
+            datetimeToLocalString: this.datetimeToLocalString.bind(this),
             fromLocalPhone: this.fromLocalPhone.bind(this),
             toLocalPhone: this.toLocalPhone.bind(this),
             fromLocaleDigit: this.fromLocaleDigit.bind(this),
@@ -113,11 +117,23 @@ class LocaleContextProvider extends React.Component {
 
     /**
      * @param {String} datetime - ISO-formatted datetime string
+     * @returns {String}
+     */
+    datetimeToCalendarTime(datetime) {
+        return DateUtils.datetimeToCalendarTime(
+            this.props.preferredLocale,
+            datetime,
+            lodashGet(this.props, 'currentUserPersonalDetails.timezone.selected'),
+        );
+    }
+
+    /**
+     * @param {String} datetime - ISO-formatted datetime string
      * @param {Boolean} [includeTimezone]
      * @returns {String}
      */
-    datetimeToCalendarTime(datetime, includeTimezone) {
-        return DateUtils.datetimeToCalendarTime(
+    datetimeToLocalString(datetime, includeTimezone) {
+        return DateUtils.datetimeToLocalString(
             this.props.preferredLocale,
             datetime,
             includeTimezone,

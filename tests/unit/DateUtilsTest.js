@@ -28,13 +28,24 @@ describe('DateUtils', () => {
 
     it('should return the date in calendar time when calling datetimeToCalendarTime', () => {
         const today = moment.utc().set({hour: 14, minute: 32});
-        expect(DateUtils.datetimeToCalendarTime(LOCALE, today)).toBe('Today at 2:32 PM');
+        expect(DateUtils.datetimeToCalendarTime(LOCALE, today)).toBe('Today');
 
         const yesterday = moment.utc().subtract(1, 'days').set({hour: 7, minute: 43});
-        expect(DateUtils.datetimeToCalendarTime(LOCALE, yesterday)).toBe('Yesterday at 7:43 AM');
+        expect(DateUtils.datetimeToCalendarTime(LOCALE, yesterday)).toBe('Yesterday');
 
         const date = moment.utc('2022-11-05').set({hour: 10, minute: 17});
-        expect(DateUtils.datetimeToCalendarTime(LOCALE, date)).toBe('Nov 5, 2022 at 10:17 AM');
+        expect(DateUtils.datetimeToCalendarTime(LOCALE, date)).toBe('Nov 5, 2022');
+    });
+
+    it('should return the date in calendar time when calling datetimeToLocalString', () => {
+        const today = moment.utc().set({hour: 14, minute: 32});
+        expect(DateUtils.datetimeToLocalString(LOCALE, today)).toBe('2:32 PM');
+
+        const yesterday = moment.utc().subtract(1, 'days').set({hour: 7, minute: 43});
+        expect(DateUtils.datetimeToLocalString(LOCALE, yesterday)).toBe('7:43 AM');
+
+        const date = moment.utc('2022-11-05').set({hour: 10, minute: 17});
+        expect(DateUtils.datetimeToLocalString(LOCALE, date)).toBe('10:17 AM');
     });
 
     it('should return the date in calendar time when calling datetimeToRelative', () => {

@@ -58,8 +58,38 @@ function getLocalMomentFromDatetime(locale, datetime, currentSelectedTimezone = 
  *
  * e.g.
  *
- * Jan 20 at 5:30 PM          within the past year
- * Jan 20, 2019 at 5:30 PM    anything over 1 year ago
+ * Jan 20         within the past year
+ * Jan 20, 2019   anything over 1 year ago
+ *
+ * @param {String} locale
+ * @param {String} datetime
+ * @param {String} [currentSelectedTimezone]
+ *
+ * @returns {String}
+ */
+function datetimeToCalendarTime(locale, datetime, currentSelectedTimezone) {
+    const date = getLocalMomentFromDatetime(locale, datetime, currentSelectedTimezone);
+
+    const today = Localize.translate(locale, 'common.today');
+    const tomorrow = Localize.translate(locale, 'common.tomorrow');
+    const yesterday = Localize.translate(locale, 'common.yesterday');
+
+    return moment(date).calendar({
+        sameDay: `[${today}]`,
+        nextDay: `[${tomorrow}]`,
+        lastDay: `[${yesterday}]`,
+        nextWeek: 'MMM D',
+        lastWeek: 'MMM D',
+        sameElse: 'MMM D, YYYY',
+    });
+}
+
+/**
+ * Formats an ISO-formatted datetime string time string
+ *
+ * e.g.
+ *
+ *  5:30 PM
  *
  * @param {String} locale
  * @param {String} datetime
@@ -68,23 +98,11 @@ function getLocalMomentFromDatetime(locale, datetime, currentSelectedTimezone = 
  *
  * @returns {String}
  */
-function datetimeToCalendarTime(locale, datetime, includeTimeZone = false, currentSelectedTimezone) {
+function datetimeToLocalString(locale, datetime, includeTimeZone = false, currentSelectedTimezone) {
     const date = getLocalMomentFromDatetime(locale, datetime, currentSelectedTimezone);
     const tz = includeTimeZone ? ' [UTC]Z' : '';
 
-    const todayAt = Localize.translate(locale, 'common.todayAt');
-    const tomorrowAt = Localize.translate(locale, 'common.tomorrowAt');
-    const yesterdayAt = Localize.translate(locale, 'common.yesterdayAt');
-    const at = Localize.translate(locale, 'common.conjunctionAt');
-
-    return moment(date).calendar({
-        sameDay: `[${todayAt}] LT${tz}`,
-        nextDay: `[${tomorrowAt}] LT${tz}`,
-        lastDay: `[${yesterdayAt}] LT${tz}`,
-        nextWeek: `MMM D [${at}] LT${tz}`,
-        lastWeek: `MMM D [${at}] LT${tz}`,
-        sameElse: `MMM D, YYYY [${at}] LT${tz}`,
-    });
+    return moment(date).format(`LT${tz}`);
 }
 
 /**
@@ -188,11 +206,21 @@ function subtractMillisecondsFromDateTime(dateTime, milliseconds) {
 }
 
 /**
+ * @param {String} date
+ * @param {String} formatString
+ * @returns {String}
+ */
+function formatDate(date, formatString = 'MMM D, YYYY') {
+    return moment(date).format(formatString);
+}
+
+/**
  * @namespace DateUtils
  */
 const DateUtils = {
     datetimeToRelative,
     datetimeToCalendarTime,
+    datetimeToLocalString,
     startCurrentDateUpdater,
     getLocalMomentFromDatetime,
     getCurrentTimezone,
@@ -201,6 +229,7 @@ const DateUtils = {
     getMicroseconds,
     getDBTime,
     subtractMillisecondsFromDateTime,
+    formatDate,
 };
 
 export default DateUtils;

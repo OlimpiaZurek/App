@@ -40,6 +40,7 @@ import ChronosOOOListActions from '../../../components/ReportActionItem/ChronosO
 import ReportActionItemReactions from '../../../components/Reactions/ReportActionItemReactions';
 import * as Report from '../../../libs/actions/Report';
 import withLocalize from '../../../components/withLocalize';
+import FloatingDateIndicator from './FloatingDateIndicator';
 
 const propTypes = {
     /** Report for this action */
@@ -68,6 +69,9 @@ const propTypes = {
 
     /** Stores user's preferred skin tone */
     preferredSkinTone: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+
+    /** Should we show date indicator */
+    showDateIndicator: PropTypes.bool.isRequired,
 
     ...windowDimensionsPropTypes,
 };
@@ -249,6 +253,9 @@ class ReportActionItem extends Component {
                 preventDefaultContentMenu={!this.props.draftMessage}
                 withoutFocusOnSecondaryInteraction
             >
+                {this.props.showDateIndicator && (
+                    <FloatingDateIndicator created={this.props.action.created} />
+                )}
                 <Hoverable>
                     {hovered => (
                         <View accessibilityLabel={this.props.translate('accessibilityHints.chatMessage')}>

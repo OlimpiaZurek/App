@@ -1469,6 +1469,14 @@ const styles = {
         ...sizing.h100,
     },
 
+    chatItemDateIndicatorWrapper: {
+        zIndex: 1,
+    },
+
+    chatItemDateIndicator: {
+        backgroundColor: themeColors.border,
+    },
+
     chatFooter: {
         paddingLeft: 20,
         paddingRight: 20,
